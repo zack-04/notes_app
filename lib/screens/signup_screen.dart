@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notes_app/components/custom_button.dart';
+import 'package:notes_app/components/custom_form_field.dart';
+import 'package:notes_app/components/custom_password_field.dart';
 import 'package:notes_app/screens/signin_screen.dart';
+import 'package:notes_app/utils/validator.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({
@@ -120,158 +123,53 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         Row(
                           children: [
                             Expanded(
-                              child: TextFormField(
+                              child: CustomFormField(
                                 controller: _firstName,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Field can't be empty";
-                                  }
-                                  return null;
-                                },
-                                cursorColor: Colors.white70,
-                                style: TextStyle(color: Colors.white70),
-                                decoration: InputDecoration(
-                                  label: const Text(
-                                    'First name',
-                                  ),
-                                  labelStyle: TextStyle(
-                                    color: Colors.white70,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ),
+                                validator: Validator.validateName,
+                                label: 'First name',
                               ),
                             ),
                             const SizedBox(
                               width: 10,
                             ),
                             Expanded(
-                              child: TextFormField(
+                              child: CustomFormField(
                                 controller: _lastName,
-                                cursorColor: Colors.white70,
-                                validator: (value) {
-                                  if (value!.isEmpty) {
-                                    return "Field can't be empty";
-                                  }
-                                  return null;
-                                },
-                                style: TextStyle(color: Colors.white70),
-                                decoration: InputDecoration(
-                                  label: const Text(
-                                    'Last name',
-                                  ),
-                                  labelStyle: TextStyle(
-                                    color: Colors.white70,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide(
-                                      color: Colors.white70,
-                                    ),
-                                  ),
-                                ),
+                                validator: Validator.validateName,
+                                label: 'Last name',
                               ),
                             ),
                           ],
                         ),
                         SizedBox(height: 20.sp),
-                        TextFormField(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Email can't be empty";
-                              }
-                              return null;
-                            },
-                            style: TextStyle(color: Colors.white70),
-                            controller: _email,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              label: const Text('Email'),
-                              labelStyle: TextStyle(
-                                color: Colors.white70,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20.sp,),
-                        //password
-                        TextFormField(
-                          controller: _password,
-                          obscureText: !showPassword,
-                          cursorColor: Colors.white70,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return "Field can't be empty";
-                            }
-                            return null;
-                          },
-                          style: TextStyle(color: Colors.white70),
-                          decoration: InputDecoration(
-                            label: const Text('Password'),
-                            labelStyle: TextStyle(
-                              color: Colors.white70,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                color: Colors.white70,
-                              ),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: const BorderSide(
-                                color: Colors.white70,
-                              ),
-                            ),
-                            suffixIcon: GestureDetector(
-                              onTap: () => setState(() {
-                                showPassword = !showPassword;
-                              }),
-                              child: const Icon(
-                                Icons.remove_red_eye,
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ),
+                        CustomFormField(
+                          controller: _email,
+                          validator: Validator.validateEmail,
+                          label: 'Email',
                         ),
+                        SizedBox(
+                          height: 20.sp,
+                        ),
+                        //password
+                        CustomPasswordField(),
                         const SizedBox(height: 20),
                       ],
                     ),
                   ),
                   SizedBox(height: 20.h),
                   CustomButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_globalKey.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Processing Data'),
+                          ),
+                        );
+                      }
+                    },
                     text: 'Sign Up',
                     color: Colors.white70,
                     textColor: Colors.black,
-                  
                   ),
                   SizedBox(
                     height: 20.h,

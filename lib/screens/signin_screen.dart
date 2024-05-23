@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notes_app/components/custom_button.dart';
+import 'package:notes_app/components/custom_form_field.dart';
+import 'package:notes_app/components/custom_password_field.dart';
 import 'package:notes_app/screens/signup_screen.dart';
+import 'package:notes_app/utils/validator.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -110,76 +113,15 @@ class _SigninScreenState extends State<SigninScreen> {
                       key: _globalKey,
                       child: Column(
                         children: [
-                          TextFormField(
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Email can't be empty";
-                              }
-                              return null;
-                            },
-                            style: TextStyle(color: Colors.white70),
+                          CustomFormField(
                             controller: _email,
-                            keyboardType: TextInputType.emailAddress,
-                            decoration: InputDecoration(
-                              label: const Text('Email'),
-                              labelStyle: TextStyle(
-                                color: Colors.white70,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ),
+                            validator: Validator.validateEmail,
+                            label: 'Email',
                           ),
                           SizedBox(
                             height: 20.sp,
                           ),
-                          TextFormField(
-                            controller: _password,
-                            obscureText: !showPassword,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return "Field can't be empty";
-                              }
-                              return null;
-                            },
-                            style: TextStyle(color: Colors.white70),
-                            decoration: InputDecoration(
-                              label: const Text('Password'),
-                              labelStyle: TextStyle(
-                                color: Colors.white70,
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                borderSide: BorderSide(
-                                  color: Colors.white70,
-                                ),
-                              ),
-                              suffixIcon: GestureDetector(
-                                onTap: () => setState(() {
-                                  showPassword = !showPassword;
-                                }),
-                                child: const Icon(
-                                  Icons.remove_red_eye,
-                                  color: Colors.white70,
-                                ),
-                              ),
-                            ),
-                          ),
+                          const CustomPasswordField(),
                         ],
                       ),
                     ),
@@ -188,7 +130,13 @@ class _SigninScreenState extends State<SigninScreen> {
                     height: 30.h,
                   ),
                   CustomButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      if (_globalKey.currentState!.validate()) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Processing Data')),
+                        );
+                      }
+                    },
                     text: 'Sign In',
                     color: Colors.white70,
                     textColor: Colors.black,
