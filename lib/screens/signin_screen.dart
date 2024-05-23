@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:notes_app/components/custom_button.dart';
+import 'package:notes_app/screens/signup_screen.dart';
 
 class SigninScreen extends StatefulWidget {
   const SigninScreen({super.key});
@@ -184,49 +187,43 @@ class _SigninScreenState extends State<SigninScreen> {
                   SizedBox(
                     height: 30.h,
                   ),
-                  SizedBox(
-                    height: 40.h,
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white70,
-                      ),
-                      child: Text(
-                        'LOGIN',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18.sp,
-                        ),
-                      ),
-                    ),
+                  CustomButton(
+                    onPressed: () {},
+                    text: 'Sign In',
+                    color: Colors.white70,
+                    textColor: Colors.black,
                   ),
                   SizedBox(
                     height: 30.h,
                   ),
-                  Center(
-                    child: RichText(
-                      text: TextSpan(
-                        style: TextStyle(
-                          fontSize: 16.0.sp,
-                          color: Colors.grey,
-                          fontWeight: FontWeight.w400,
-                          height: 1.1.h,
-                        ),
-                        children: const [
-                          TextSpan(
-                            text: "Don't have an account?  ",
-                          ),
-                          TextSpan(
-                            text: 'Signup',
-                            style:
-                                TextStyle(decoration: TextDecoration.underline),
-                            // Add onTap callback for handling tap event
-                          ),
-                          
-                        ],
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account?  ",
+                        style:
+                            TextStyle(color: Colors.white70, fontSize: 15.sp),
                       ),
-                    ),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SignUpScreen(),
+                            ),
+                          );
+                        },
+                        child: Text(
+                          'Signup',
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            decorationColor: Colors.white70,
+                            color: Colors.white70,
+                            fontSize: 15.sp,
+                          ),
+                        ),
+                      )
+                    ],
                   ),
                 ],
               ),
