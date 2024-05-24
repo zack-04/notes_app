@@ -6,11 +6,13 @@ class CustomFormField extends StatelessWidget {
     required this.controller,
     required this.validator,
     required this.label,
+    required this.textInputType,
   });
 
   final TextEditingController controller;
   final String? Function(String?)? validator;
   final String label;
+  final TextInputType textInputType;
 
   @override
   Widget build(BuildContext context) {
@@ -18,14 +20,13 @@ class CustomFormField extends StatelessWidget {
       controller: controller,
       validator: validator,
       cursorColor: Colors.white70,
-      style: TextStyle(color: Colors.white70),
-      keyboardType: TextInputType.emailAddress,
+      style: const TextStyle(color: Colors.white70),
+      keyboardType: textInputType,
       decoration: InputDecoration(
         label: Text(label),
-        labelStyle: TextStyle(
+        labelStyle: const TextStyle(
           color: Colors.white70,
         ),
-       
         border: OutlineInputBorder(
           borderSide: const BorderSide(
             width: 2,
@@ -35,13 +36,13 @@ class CustomFormField extends StatelessWidget {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Colors.white70,
           ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15),
-          borderSide: BorderSide(
+          borderSide: const BorderSide(
             color: Colors.white70,
           ),
         ),

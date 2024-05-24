@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notes_app/components/custom_button.dart';
 import 'package:notes_app/components/custom_form_field.dart';
 import 'package:notes_app/components/custom_password_field.dart';
+import 'package:notes_app/screens/home_screen.dart';
 import 'package:notes_app/screens/signup_screen.dart';
+import 'package:notes_app/utils/firebase_service.dart';
+import 'package:notes_app/utils/snackbar_helper.dart';
 import 'package:notes_app/utils/validator.dart';
 
 class SigninScreen extends StatefulWidget {
@@ -28,52 +30,32 @@ class _SigninScreenState extends State<SigninScreen> {
     super.dispose();
   }
 
-  // void handleSubmit() async {
-  //   isFormValid = _globalKey.currentState!.validate();
-  //   if (!isFormValid) {
-  //     return;
-  //   } else {
-  //     _globalKey.currentState!.save();
-  //     // FirebaseService firebaseService = FirebaseService();
-  //     final response =
-  //         await FirebaseService().createUser(_email.text, _password.text);
+  void handleSubmit() async {
+    isFormValid = _globalKey.currentState!.validate();
+    if (!isFormValid) {
+      return;
+    } else {
+      _globalKey.currentState!.save();
+      final response =
+          await FirebaseService().signInUser(_email.text, _password.text);
 
-  //     if (response['type'] == 'SUCCESS' && mounted) {
-  //       Navigator.of(context).push(
-  //         MaterialPageRoute(
-  //           builder: (context) => SignUpScreen2(
-  //             email: _email.text,
-  //           ),
-  //         ),
-  //       );
-  //     } else if (response['type'] == 'ERROR') {
-  //       if (response['message'] == 'Email already in use') {
-  //         final response2 =
-  //             await FirebaseService().signInUser(_email.text, _password.text);
-  //         if (response2['type'] == 'SUCCESS' && mounted) {
-  //           Navigator.of(context).push(
-  //             MaterialPageRoute(
-  //               builder: (context) =>  SignUpScreen3(email: _email.text,),
-  //             ),
-  //           );
-  //         } else if (response2['type'] == 'ERROR' && mounted) {
-
-  //           SnackbarHelper.showErrorSnackbar(
-  //             context,
-  //             response2['message'],
-  //           );
-  //         }
-  //       } else {
-  //         if (mounted) {
-  //           SnackbarHelper.showErrorSnackbar(
-  //             context,
-  //             response['message'],
-  //           );
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
+      if (response['type'] == 'SUCCESS' && mounted) {
+        //TODO:set user data in provider
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+        );
+      } else if (response['type'] == 'ERROR') {
+        if (mounted) {
+          SnackbarHelper.showErrorSnackbar(
+            context,
+            response['message'],
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -117,11 +99,23 @@ class _SigninScreenState extends State<SigninScreen> {
                             controller: _email,
                             validator: Validator.validateEmail,
                             label: 'Email',
+                            textInputType: TextInputType.emailAddress,
                           ),
                           SizedBox(
                             height: 20.sp,
                           ),
-                          const CustomPasswordField(),
+                          CustomPasswordField(
+                            controller: _password,
+                            suffixIcon: GestureDetector(
+                              onTap: () => setState(() {
+                                showPassword = !showPassword;
+                              }),
+                              child: const Icon(
+                                Icons.remove_red_eye,
+                                color: Colors.white70,
+                              ),
+                            ), showPassword: showPassword,
+                          ),
                         ],
                       ),
                     ),
@@ -130,13 +124,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     height: 30.h,
                   ),
                   CustomButton(
-                    onPressed: () {
-                      if (_globalKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Processing Data')),
-                        );
-                      }
-                    },
+                    onPressed: handleSubmit,
                     text: 'Sign In',
                     color: Colors.white70,
                     textColor: Colors.black,
@@ -157,7 +145,7 @@ class _SigninScreenState extends State<SigninScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => SignUpScreen(),
+                              builder: (context) => const SignUpScreen(),
                             ),
                           );
                         },

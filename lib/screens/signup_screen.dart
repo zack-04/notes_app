@@ -3,7 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notes_app/components/custom_button.dart';
 import 'package:notes_app/components/custom_form_field.dart';
 import 'package:notes_app/components/custom_password_field.dart';
+import 'package:notes_app/screens/home_screen.dart';
 import 'package:notes_app/screens/signin_screen.dart';
+import 'package:notes_app/utils/firebase_service.dart';
+import 'package:notes_app/utils/snackbar_helper.dart';
 import 'package:notes_app/utils/validator.dart';
 
 class SignUpScreen extends StatefulWidget {
@@ -34,53 +37,37 @@ class _SignUpScreenState extends State<SignUpScreen> {
     super.dispose();
   }
 
-  // void validateAndSave() async {
-  //   isFormValid = _globalKey.currentState!.validate();
-  //   if (isFormValid && (!_isCheckedBox1 || !_isCheckedBox2)) {
-  //     SnackbarHelper.showErrorSnackbar(context, 'Please check the boxes to continue');
-  //   } else {
-  //     _globalKey.currentState!.save();
-  //     //save values in ft
-  //     try {
-  //       await FirebaseService().saveUserDetails({
-  //       'firstName':_firstName.text,
-  //       'lastName':_lastName.text,
-  //       'dob':_dob.text,
-  //       'email':widget.email,
-  //     });
-  //     if (mounted) {
-  //       Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) =>  SignUpScreen4(email: widget.email,),
-  //       ),
-  //     );
-  //     }
-  //     } catch (e) {
-  //       if (mounted) {
-  //         SnackbarHelper.showErrorSnackbar(context, e.toString());
-  //       }
-  //     }
+  void handleSubmit() async {
+    isFormValid = _globalKey.currentState!.validate();
+    if (!isFormValid) {
+      return;
+    } else {
+      _globalKey.currentState!.save();
 
-  //   }
-  // }
+      final response = await FirebaseService().createUser(
+        _email.text,
+        _password.text,
+        _firstName.text,
+        _lastName.text,
+      );
 
-  // Future<void> _selectDate(BuildContext context) async {
-  //   if (selectedDate == null) {
-  //     final DateTime? pickedDate = await showDatePicker(
-  //       context: context,
-  //       initialDate: DateTime.now(),
-  //       firstDate: DateTime(2000),
-  //       lastDate: DateTime(2101),
-  //     );
-  //     if (pickedDate != null) {
-  //       setState(() {
-  //         selectedDate = pickedDate;
-  //         _dob.text = pickedDate.toLocal().toString().split(' ')[0];
-  //       });
-  //     }
-  //   }
-  // }
+      if (response['type'] == 'SUCCESS' && mounted) {
+        //TODO:set user data in provider
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => const HomeScreen(),
+          ),
+        );
+      } else if (response['type'] == 'ERROR') {
+        if (mounted) {
+          SnackbarHelper.showErrorSnackbar(
+            context,
+            response['message'],
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,6 +114,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 controller: _firstName,
                                 validator: Validator.validateName,
                                 label: 'First name',
+                                textInputType: TextInputType.name,
                               ),
                             ),
                             const SizedBox(
@@ -137,6 +125,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 controller: _lastName,
                                 validator: Validator.validateName,
                                 label: 'Last name',
+                                textInputType: TextInputType.name,
                               ),
                             ),
                           ],
@@ -146,27 +135,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           controller: _email,
                           validator: Validator.validateEmail,
                           label: 'Email',
+                          textInputType: TextInputType.emailAddress,
                         ),
                         SizedBox(
                           height: 20.sp,
                         ),
                         //password
-                        CustomPasswordField(),
+                        CustomPasswordField(
+                          controller: _password,
+                          suffixIcon: GestureDetector(
+                            onTap: () => setState(() {
+                              showPassword = !showPassword;
+                            }),
+                            child: const Icon(
+                              Icons.remove_red_eye,
+                              color: Colors.white70,
+                            ),
+                          ), showPassword: showPassword,
+                        ),
                         const SizedBox(height: 20),
                       ],
                     ),
                   ),
                   SizedBox(height: 20.h),
                   CustomButton(
-                    onPressed: () {
-                      if (_globalKey.currentState!.validate()) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Processing Data'),
-                          ),
-                        );
-                      }
-                    },
+                    onPressed: handleSubmit,
                     text: 'Sign Up',
                     color: Colors.white70,
                     textColor: Colors.black,

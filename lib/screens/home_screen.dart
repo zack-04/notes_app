@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:notes_app/screens/add_note_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -16,8 +17,8 @@ class HomeScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'NOTES',
+                  const Text(
+                    'QuickNotes',
                     style: TextStyle(
                       fontSize: 25,
                       color: Colors.white,
@@ -25,7 +26,7 @@ class HomeScreen extends StatelessWidget {
                   ),
                   IconButton(
                     onPressed: () {},
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.sort,
                       color: Colors.white,
                       size: 30,
@@ -34,14 +35,14 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
               SizedBox(
-                height: 20,
+                height: 20.sp,
               ),
               TextField(
                 decoration: InputDecoration(
-                  contentPadding: EdgeInsets.symmetric(vertical: 10),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 10),
                   hintText: 'Search notes...',
-                  hintStyle: TextStyle(color: Colors.white, fontSize: 20),
-                  prefixIcon: Icon(
+                  hintStyle: const TextStyle(color: Colors.white, fontSize: 20),
+                  prefixIcon: const Icon(
                     Icons.search,
                     color: Colors.white,
                   ),
@@ -49,13 +50,13 @@ class HomeScreen extends StatelessWidget {
                   filled: true,
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       color: Colors.transparent,
                     ),
                   ),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide(
+                    borderSide: const BorderSide(
                       color: Colors.transparent,
                     ),
                   ),
@@ -66,10 +67,17 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddNoteScreen(),
+            ),
+          );
+        },
         backgroundColor: Colors.grey.shade800,
         elevation: 10,
-        child: Icon(
+        child: const Icon(
           Icons.add,
           size: 30,
           color: Colors.white,

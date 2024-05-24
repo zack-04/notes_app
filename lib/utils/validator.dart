@@ -17,7 +17,9 @@ class Validator {
     if (value == null || value.isEmpty) {
       return 'Email is required';
     }
-    final emailRegExp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+    final emailRegExp = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
     if (!emailRegExp.hasMatch(value)) {
       return 'Please enter a valid email';
     }
@@ -29,7 +31,7 @@ class Validator {
       return 'Password is required';
     }
     final passwordRegExp =
-        RegExp(r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$');
+        RegExp(r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$');
     if (!passwordRegExp.hasMatch(value)) {
       return 'Must be 8+ chars, including a letter and a number';
     }
