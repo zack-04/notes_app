@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:notes_app/components/custom_button.dart';
 import 'package:notes_app/components/custom_form_field.dart';
 import 'package:notes_app/components/custom_password_field.dart';
+import 'package:notes_app/provider/user_provider.dart';
 import 'package:notes_app/screens/home_screen.dart';
 import 'package:notes_app/screens/signup_screen.dart';
 import 'package:notes_app/utils/firebase_service.dart';
@@ -41,6 +42,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
       if (response['type'] == 'SUCCESS' && mounted) {
         //TODO:set user data in provider
+        UserProvider().setEmail(_email.text);
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => const HomeScreen(),

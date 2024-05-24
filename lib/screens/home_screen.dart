@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:notes_app/provider/user_provider.dart';
 import 'package:notes_app/screens/add_note_screen.dart';
+import 'package:notes_app/screens/signin_screen.dart';
+import 'package:notes_app/utils/firebase_service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    void signOut() async {
+      await FirebaseService().logOut();
+      UserProvider().clearEmail();
+    }
+
     return Scaffold(
       backgroundColor: Colors.grey.shade900,
       body: SafeArea(
@@ -25,9 +33,17 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      signOut();
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SigninScreen(),
+                        ),
+                      );
+                    },
                     icon: const Icon(
-                      Icons.sort,
+                      Icons.logout,
                       color: Colors.white,
                       size: 30,
                     ),
